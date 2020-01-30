@@ -1,0 +1,36 @@
+---
+# tasks file for webserver
+- name: Install Apache
+  apt:
+    pkg:
+      - apache2
+  become: yes
+
+- name: Change Apache User
+  lineinfile:
+    path: /etc/apache2/apache2.conf
+    regexp: '^User ${APACHE_RUN_USER}'
+    line: User vagrant
+  notify: restart apache
+  become: yes
+
+- name: Change Apache Group
+  lineinfile:
+    path: /etc/apache2/apache2.conf
+    regexp: '^Group ${APACHE_RUN_GROUP}'
+    line: Group vagrant
+  notify: restart apache
+  become: yes
+
+- name: Activate Apache Modules
+  apache2_module:
+    state: present
+    name: rewrite
+  notify: restart apache
+  become: yes
+
+- name: Delete default apache site
+  file:
+    path: /var/www/html/index.html
+    state: absent
+  become: yes

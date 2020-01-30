@@ -1,0 +1,15 @@
+---
+# tasks file for common
+
+- name: Mise à jour système
+  apt:
+    update_cache: yes
+    upgrade: dist
+  become: yes
+
+- name: Installation des outils de base
+  apt:
+    pkg:
+      - zip
+      - unzip
+  become: yes

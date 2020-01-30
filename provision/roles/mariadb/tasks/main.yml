@@ -1,0 +1,28 @@
+---
+# tasks file for mariadb
+- name: Install Utility tools
+  apt:
+    pkg:
+      - software-properties-common
+      - python-mysqldb
+  become: yes
+
+- name: Install MariaDB Packages
+  apt:
+    pkg:
+      - mariadb-client
+      - mariadb-common
+      - mariadb-server
+  become: yes
+
+- name: Create database user with password and all database privileges and 'WITH GRANT OPTION'
+  mysql_user:
+    name: user
+    password: user
+    priv: '*.*:ALL,GRANT'
+    state: present
+
+- name: Create a new database
+  mysql_db:
+    name: vagrant_db
+    state: present

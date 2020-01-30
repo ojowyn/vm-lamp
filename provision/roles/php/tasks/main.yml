@@ -1,0 +1,40 @@
+---
+# tasks file for php
+
+- name: add repo
+  apt_repository:
+    repo: ppa:ondrej/php
+    update_cache: yes
+
+- name: Install Php
+  apt:
+    pkg:
+      - php7.4
+  become: yes
+
+- name: Install php Extension
+  apt:
+    pkg:
+      - php7.4-{{ item }}
+  with_items:
+    - curl
+    - intl
+    - mysql
+    - mysqli
+    - mbstring
+    - zip
+    - gd
+    - imagick
+
+- name: Install Composer
+  script: files/install_composer.sh
+
+- name: Move Composer globally
+  become: true
+  command: mv composer.phar /usr/local/bin/composer
+
+- name: Set permissions on Composer
+  become: true
+  file:
+    path: /usr/local/bin/composer
+    mode: "a+x"
